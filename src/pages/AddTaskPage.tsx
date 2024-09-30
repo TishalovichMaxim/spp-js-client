@@ -9,7 +9,17 @@ function AddTaskPage() {
     const [date, setDate] = useState("")
     const [infoMessage, setInfoMessage] = useState("")
 
-    const addTask = async function() {
+    const addTask = async function(e: any) {
+        e.preventDefault();
+
+        if (title.length == 0
+            || content.length == 0
+            || date === ""
+        ) {
+            setInfoMessage("Invalid input...")
+            return
+        }
+
         try {
             const resp = await fetch(
                 urlBase + "tasks",
@@ -40,7 +50,7 @@ function AddTaskPage() {
 
     return (
         <>
-            <div>
+            <form onSubmit={addTask}>
                 <div>
                     <div>
                         Title: 
@@ -97,7 +107,7 @@ function AddTaskPage() {
                         Add task
                     </button>
                 </div>
-            </div>
+            </form>
         </>
     )
 }

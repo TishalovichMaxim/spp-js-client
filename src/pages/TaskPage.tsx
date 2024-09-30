@@ -27,34 +27,6 @@ function TaskPage(props: TaskPageParams) {
     const [attachMessage, setAttachMessage] = useState("")
 
     const updateTask = async function() {
-        fetch(
-            urlBase + "tasks/" + task.id,
-            {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    title: title,
-                    content: content,
-                    status:  status,
-                    completionDate: date
-                }),
-            }
-        )
-        .then(
-            async (res) => {
-                if (res.status == 200) {
-                    setUpdateMessage("Task successfully updated")
-                } else {
-                    const errorInfo = await res.json()
-                    setUpdateMessage(errorInfo.message)
-                }
-            },
-            (err) => {
-                setUpdateMessage("An error occured...")
-            }
-        )
     }
 
     const deleteTask = async function() {
@@ -73,7 +45,8 @@ function TaskPage(props: TaskPageParams) {
                     setDeleteMessage(errorInfo.message)
                 }
             },
-            (err) => {
+            () => {
+                setDeleteMessage("Error...")
             }
         )
     }
@@ -118,9 +91,51 @@ function TaskPage(props: TaskPageParams) {
         }
     }
 
+    const onTaskUpdate = (e: any) => {
+        e.preventDefault()
+
+        if (
+            title.length == 0
+            && content.length == 0
+            && date === ""
+        ) {
+            setUpdateMessage("Invalid input...")
+            return
+        }
+
+        fetch(
+            urlBase + "tasks/" + task.id,
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    title: title,
+                    content: content,
+                    status:  status,
+                    completionDate: date
+                }),
+            }
+        )
+        .then(
+            async (res) => {
+                if (res.status == 200) {
+                    setUpdateMessage("Task successfully updated")
+                } else {
+                    const errorInfo = await res.json()
+                    setUpdateMessage(errorInfo.message)
+                }
+            },
+            () => {
+                setUpdateMessage("An error occured...")
+            }
+        )
+    }
+
     return (
         <>
-            <div>
+            <form onSubmit={onTaskUpdate}>
                 <div>
                     Update task info:
                 </div>
@@ -176,7 +191,7 @@ function TaskPage(props: TaskPageParams) {
                         onClick={updateTask}
                     />
                 </div>
-            </div>
+            </form>
             <div>
                 <h3>
                     Delete task:
