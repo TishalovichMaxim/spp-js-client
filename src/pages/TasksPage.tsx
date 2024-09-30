@@ -9,13 +9,6 @@ type TaskPageProps = {
     setPageType: (pageType: PageType) => void
 }
 
-enum StatusFilter {
-    NONE,
-    DONE,
-    IN_PROGRESS,
-    TDDO,
-}
-
 function TasksPage(props: TaskPageProps) {
     const [tasks, setTasks] = useState([])
     const [filter, setFilter] = useState<TaskStatus | undefined>(undefined)
