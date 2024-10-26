@@ -1,56 +1,28 @@
 import { useEffect, useState } from "react"
-import { urlBase } from "../config/config"
 import { Task, TaskStatus } from "../model/task"
 import TaskPreview from "./components/TaskPreview"
 import { PageType } from "./PageType"
+import { getTasks } from "../logic/tasks-page"
+import Navbar from "./components/Navbar"
 
 type TaskPageProps = {
     selectTask: (task: Task) => void,
     setPageType: (pageType: PageType) => void
 }
 
-enum TasksLoadingState {
-    LOADING,
-    ERROR_OCCURED,
-    SUCCESSFULLY_LOADED,
+async function setResponseTasks(setTasks: any, setPageType: (pt: PageType) => void) {
+    const tasks = await getTasks(setPageType)
+    setTasks(tasks)
 }
 
 function TasksPage(props: TaskPageProps) {
-    const [state, setState] = useState(TasksLoadingState.LOADING)
-    const [tasks, setTasks] = useState([])
-    const [tasksStartedLoading, setTasksStartedLoading] = useState(false)
+    const [tasks, setTasks] = useState<Task[]>([])
     const [filter, setFilter] = useState<TaskStatus | undefined>(undefined)
 
-    const selectTask = props.selectTask
-    const setPageType = props.setPageType
-
-    if (!tasksStartedLoading) {
-        setTasksStartedLoading(true)
-        fetch(
-            urlBase + "tasks",
-            { method: 'get' }
-        )
-        .then(
-            (resp) => {
-                console.log(resp)
-                return resp.json()
-            },
-        )
-        .then(
-            (tasks) => {
-                console.log(tasks)
-                setTasks(tasks)
-                setState(TasksLoadingState.SUCCESSFULLY_LOADED)
-            },
-        )
-        .catch(() => {
-            if (state == TasksLoadingState.LOADING) {
-                setState(TasksLoadingState.ERROR_OCCURED)
-            }
-            console.log("Error during loading")
-        })
-
-    }
+    useEffect(
+        () => { setResponseTasks(setTasks, props.setPageType) },
+        []
+    )
 
     const onFilterChange = (newFilterStr: string) => {
         if (newFilterStr == "undefined") {
@@ -60,28 +32,19 @@ function TasksPage(props: TaskPageProps) {
         }
     }
 
-    let content
-    
-    if (state == TasksLoadingState.LOADING) {
-        content = "Loading tasks..."
-    } else if (state == TasksLoadingState.SUCCESSFULLY_LOADED) {
-        const filteredTasks = tasks.filter(
-            (t: Task) => filter === undefined || t.status == filter
-        )
-
-        content = filteredTasks
-            .map((t: Task) =>
-                TaskPreview(t, ()=>{
-                    selectTask(t)
-                    setPageType(PageType.Task)
-                }
-            )) 
-    } else {
-        content = "An error occured..."
-    }
+    let content = tasks
+        .filter(
+            (t: Task) => filter === undefined || t.status == filter)
+        .map((t: Task) =>
+            TaskPreview(t, ()=>{
+                props.selectTask(t)
+                props.setPageType(PageType.Task)
+            }
+        )) 
 
     return (
         <>
+            <Navbar setPageType={props.setPageType} />
             <h1>
                 Tasks
             </h1>

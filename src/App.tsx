@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import AddTaskPage from './pages/AddTaskPage'
 import { PageType } from './pages/PageType'
-import Navbar from './pages/components/Navbar'
 import { TasksPage } from './pages/TasksPage'
 import { TaskPage } from './pages/TaskPage'
 import { Task } from './model/task'
+import { RegistrationPage } from './pages/RegistrationPage'
+import { LoginPage } from './pages/LoginPage'
 
 let chosenTask: Task | undefined = undefined
 
@@ -23,14 +24,15 @@ function App() {
             setPageType={setPageType}
         />
     } else if (pageType == PageType.AddTask) {
-        content = <AddTaskPage />
+        content = <AddTaskPage setPageType={setPageType} />
+    } else if (pageType == PageType.Login) {
+        content = <LoginPage setPageType={setPageType} />
+    } else {
+        content = <RegistrationPage setPageType={setPageType} />
     }
 
     return (
         <>
-            <Navbar
-                changePageType={setPageType}
-            />
             { content }
         </>
     )

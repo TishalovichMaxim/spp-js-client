@@ -1,4 +1,4 @@
-import { urlBase } from "../../config/config";
+import { URL_BASE } from "../../config/config";
 import { FileInfo } from "../../model/task";
 
 type AttachedFileProps = {
@@ -20,7 +20,7 @@ function AttachedFile(props: AttachedFileProps) {
     }
         
     const downloadFile = async () => {
-        const resp = await fetch(urlBase + "tasks/" + taskId + "/files/" + fileInfo.id)
+        const resp = await fetch(URL_BASE + "tasks/" + taskId + "/files/" + fileInfo.id)
 
         const blob = await resp.blob()
 

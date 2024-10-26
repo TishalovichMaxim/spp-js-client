@@ -1,19 +1,23 @@
+import { onLogOut } from "../../logic/navbar"
 import { PageType } from "../PageType"
 
 type PageTypeChanger = (pt: PageType) => void
 
-type NavbarParams = { changePageType: PageTypeChanger }
+type NavbarProps = { setPageType: PageTypeChanger }
 
-function Navbar(params: NavbarParams) {
+function Navbar(props: NavbarProps) {
     return (
         <>
             <nav>
                 <ul>
-                    <li onClick={() => params.changePageType(PageType.Tasks)}>
+                    <li onClick={() => props.setPageType(PageType.Tasks)}>
                         Tasks
                     </li>
-                    <li onClick={() => params.changePageType(PageType.AddTask)}>
+                    <li onClick={() => props.setPageType(PageType.AddTask)}>
                         Add task
+                    </li>
+                    <li onClick={() => onLogOut(props.setPageType)}>
+                        Log out
                     </li>
                 </ul>
             </nav>

@@ -1,4 +1,4 @@
-const urlBase = "http://localhost:18080/"
+const URL_BASE = "http://localhost:18080/"
 
-export { urlBase }
+export { URL_BASE }
 

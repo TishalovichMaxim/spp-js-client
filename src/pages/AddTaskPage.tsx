@@ -1,59 +1,35 @@
 import { useState } from "react"
-import { TaskStatus } from "../model/task"
-import { urlBase } from "../config/config"
+import { Task, TaskStatus } from "../model/task"
+import { onAddTask } from "../logic/add-task-page"
+import { PageType } from "./PageType"
+import Navbar from "./components/Navbar"
 
-function AddTaskPage() {
+type AddTaskPageProps = {
+    setPageType: (pt: PageType) => void
+}
+
+function AddTaskPage(props: AddTaskPageProps) {
     const [title, setTitle] = useState("")
     const [content, setContent] = useState("")
     const [status, setStatus] = useState(TaskStatus.TODO)
     const [date, setDate] = useState("")
     const [infoMessage, setInfoMessage] = useState("")
 
-    const addTask = async function(e: any) {
-        e.preventDefault();
-
-        if (title.length == 0
-            || content.length == 0
-            || date === ""
-        ) {
-            setInfoMessage("Invalid input...")
-            return
-        }
-
-        try {
-            const resp = await fetch(
-                urlBase + "tasks",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        title: title,
-                        content: content,
-                        status:  status,
-                        completionDate: date
-                    }),
-                }
-            )
-
-            if (resp.status == 201) {
-                setInfoMessage("Task successfully added")
-            } else if (resp.status == 400) {
-                const errorMessage = await resp.json()
-                setInfoMessage(errorMessage.message)
-            }
-        } catch (e) {
-            setInfoMessage("An error occured...")
-        }
-    }
-
+    const task = new Task(-1, "", status, title, content, date, [])
     return (
         <>
-            <form onSubmit={addTask}>
+            <Navbar setPageType={props.setPageType} />
+            <form 
+                onSubmit={(e) => onAddTask(
+                    e,
+                    task,
+                    setInfoMessage,
+                    props.setPageType
+                )
+            }>
                 <div>
                     <div>
-                        Title: 
+                        Title:
                     </div>
                     <input
                         type="text"
@@ -103,7 +79,7 @@ function AddTaskPage() {
                     { infoMessage }
                 </div>
                 <div>
-                    <button onClick={addTask}>
+                    <button>
                         Add task
                     </button>
                 </div>

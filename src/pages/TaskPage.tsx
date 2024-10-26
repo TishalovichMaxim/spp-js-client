@@ -1,9 +1,9 @@
 import { useState } from "react"
 import { Task, FileInfo } from "../model/task"
-import { urlBase } from "../config/config"
 import { PageType } from "./PageType"
 import { AttachedFile } from "./components/AttachedFile"
-import axios from "axios"
+import { onAttachFile, onDeleteTask, onDeleteAttachedFile, onUpdateTask } from "../logic/task-page"
+import Navbar from "./components/Navbar"
 
 type TaskPageParams = {
     task: Task,
@@ -23,119 +23,74 @@ function TaskPage(props: TaskPageParams) {
     const [fileForAttachment, setFileForAttachment] = useState<File | undefined>(undefined)
 
     const [updateMessage, setUpdateMessage] = useState("")
-    const [deleteMessage, setDeleteMessage] = useState("")
     const [attachMessage, setAttachMessage] = useState("")
 
-    const updateTask = async function() {
-    }
+    //const onTaskUpdate = (e: any) => {
+    //    e.preventDefault()
 
-    const deleteTask = async function() {
-        fetch(
-            urlBase + "tasks/" + task.id,
-            {
-                method: "DELETE",
-            }
-        )
-        .then(
-            async (res) => {
-                if (res.status == 204) {
-                    props.setPageType(PageType.Tasks)
-                } else {
-                    const errorInfo = await res.json()
-                    setDeleteMessage(errorInfo.message)
-                }
-            },
-            () => {
-                setDeleteMessage("Error...")
-            }
-        )
-    }
+    //    if (
+    //        title.length == 0
+    //        && content.length == 0
+    //        && date === ""
+    //    ) {
+    //        setUpdateMessage("Invalid input...")
+    //        return
+    //    }
 
-    const attachFile = async function() {
-        if (!fileForAttachment) {
-            setAttachMessage("Choose file before attachment...")
-            return
-        }
+    //    fetch(
+    //        URL_BASE + "tasks/" + task.id,
+    //        {
+    //            method: "PUT",
+    //            headers: {
+    //                "Content-Type": "application/json",
+    //            },
+    //            body: JSON.stringify({
+    //                title: title,
+    //                content: content,
+    //                status:  status,
+    //                completionDate: date
+    //            }),
+    //        }
+    //    )
+    //    .then(
+    //        async (res) => {
+    //            if (res.status == 200) {
+    //                setUpdateMessage("Task successfully updated")
+    //            } else {
+    //                const errorInfo = await res.json()
+    //                setUpdateMessage(errorInfo.message)
+    //            }
+    //        },
+    //        () => {
+    //            setUpdateMessage("An error occured...")
+    //        }
+    //    )
+    //}
 
-        const formData = new FormData()
-        
-        formData.append("file", fileForAttachment)
-
-        try {
-            const res = await axios.post(urlBase + "tasks/" + task.id + "/files", formData)
-
-            if (res.status == 201) {
-                const fileInfo: FileInfo = res.data
-                setAttachedFiles([...attachedFiles, fileInfo])
-                setAttachMessage("File attached successfully")
-            } else {
-                setAttachMessage("Error in attachment...")
-            }
-        } catch(e) {
-            setAttachMessage("Error in attachment... (server)")
-        }
-    }
-
-    const deleteAttachedFile = async (index: number) => {
-        const fileInfo = attachedFiles[index]
-
-        const url = urlBase + "tasks/" + task.id + "/files/" + fileInfo.id
-        const res = await fetch(url, {method: "DELETE"})
-
-        if (res.status == 204) {
-            const newAttachedFiles = [
-                ...attachedFiles.slice(0, index),
-                ...attachedFiles.slice(index + 1, attachedFiles.length)
-            ]
-            setAttachedFiles(newAttachedFiles)
-        }
-    }
-
-    const onTaskUpdate = (e: any) => {
-        e.preventDefault()
-
-        if (
-            title.length == 0
-            && content.length == 0
-            && date === ""
-        ) {
-            setUpdateMessage("Invalid input...")
-            return
-        }
-
-        fetch(
-            urlBase + "tasks/" + task.id,
-            {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    title: title,
-                    content: content,
-                    status:  status,
-                    completionDate: date
-                }),
-            }
-        )
-        .then(
-            async (res) => {
-                if (res.status == 200) {
-                    setUpdateMessage("Task successfully updated")
-                } else {
-                    const errorInfo = await res.json()
-                    setUpdateMessage(errorInfo.message)
-                }
-            },
-            () => {
-                setUpdateMessage("An error occured...")
-            }
-        )
-    }
+    const updatedTask = new Task(task.id, "", status, title, content, date, [])
+    
+    const attachedFilesContent = attachedFiles.map(
+        (fileInfo: FileInfo, i: number) =>
+            AttachedFile({
+                taskId: task.id,
+                fileInfo: fileInfo,
+                deleteAttachedFile: () => onDeleteAttachedFile(
+                    task.id,
+                    i,
+                    attachedFiles,
+                    setAttachedFiles,
+                    props.setPageType,
+                )
+            })
+    )
 
     return (
         <>
-            <form onSubmit={onTaskUpdate}>
+            <Navbar setPageType={props.setPageType}/>
+            <form onSubmit={(event) => {
+                    onUpdateTask(event, updatedTask, setUpdateMessage, props.setPageType)
+                }
+            }>
                 <div>
                     Update task info:
                 </div>
@@ -188,7 +143,6 @@ function TaskPage(props: TaskPageParams) {
                     <input
                         type="submit"
                         value="Update"
-                        onClick={updateTask}
                     />
                 </div>
             </form>
@@ -196,10 +150,11 @@ function TaskPage(props: TaskPageParams) {
                 <h3>
                     Delete task:
                 </h3>
-                <div>
-                    {deleteMessage}
-                </div>
-                <button onClick={deleteTask}>Delete</button>
+                <button
+                    onClick={() => onDeleteTask(task.id, props.setPageType)}
+                >
+                    Delete
+                </button>
             </div>
             <div>
                 <h3>
@@ -216,20 +171,24 @@ function TaskPage(props: TaskPageParams) {
                 <div>
                     {attachMessage}
                 </div>
-                <button onClick={attachFile}>Attach</button>
+                <button
+                    onClick={
+                        () => onAttachFile(
+                            fileForAttachment,
+                            task.id,
+                            attachedFiles,
+                            setAttachMessage,
+                            setAttachedFiles,
+                            props.setPageType
+                        )
+                    }
+                >
+                    Attach
+                </button>
             </div>
             <div>
                 <h3>Attached files:</h3>
-                {
-                    attachedFiles.map(
-                        (fileInfo: FileInfo, i: number) =>
-                            AttachedFile({
-                                taskId: task.id,
-                                fileInfo: fileInfo,
-                                deleteAttachedFile: () => deleteAttachedFile(i)
-                            })
-                    )
-                }
+                { attachedFilesContent }
             </div>
         </>
     )

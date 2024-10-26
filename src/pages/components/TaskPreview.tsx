@@ -4,11 +4,11 @@ import { Task } from "../../model/task"
 function TaskPreview(task: Task, onTaskClick: () => void) {
     return (
         <Fragment key={task.id}>
-            <div>
+            <div style={ {marginTop: 20} }>
                 <div onClick={onTaskClick}>
                     Task
                 </div>
-                <ul>
+                <ul style={ { marginTop: 0 } }>
                     <li>
                         { task.title }
                     </li>
