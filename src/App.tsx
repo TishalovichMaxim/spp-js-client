@@ -1,11 +1,11 @@
 import { useState } from 'react'
-import AddTaskPage from './pages/AddTaskPage'
-import { PageType } from './pages/PageType'
-import { TasksPage } from './pages/TasksPage'
-import { TaskPage } from './pages/TaskPage'
+import AddTaskPage from './components//pages/AddTaskPage'
+import { PageType } from './components/pages/PageType'
+import { TasksPage } from './components/pages/TasksPage'
+import { TaskPage } from './components/pages/TaskPage'
 import { Task } from './model/task'
-import { RegistrationPage } from './pages/RegistrationPage'
-import { LoginPage } from './pages/LoginPage'
+import { RegistrationPage } from './components/pages/RegistrationPage'
+import { LoginPage } from './components/pages/LoginPage'
 
 let chosenTask: Task | undefined = undefined
 

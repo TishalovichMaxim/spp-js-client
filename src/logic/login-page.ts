@@ -1,5 +1,5 @@
-import { PageType } from "../pages/PageType"
-import { signIn } from "./service/auth/sign-in"
+import { PageType } from "../components/pages/PageType"
+import { signIn } from '../ws/service/auth'
 
 function onDontHaveAnAccountClick(setPageType: (pt: PageType) => void) {
     setPageType(PageType.Registration)
@@ -17,6 +17,7 @@ async function onLoginClick(
     try {
         await signIn(login, password)
     } catch (e) {
+        console.log(e)
         setMessage("Invalid credentials...")
         return
     }

@@ -1,8 +1,9 @@
 import { FileInfo, Task } from "../model/task"
-import { PageType } from "../pages/PageType"
+import { PageType } from "../components/pages/PageType"
 import { AuthError } from "./service/auth/auth-error"
 import { InvalidDataError } from "./service/errors"
-import { deleteAttachedFile, deleteTask, attachFile, updateTask, validateTask } from "./service/task"
+import { validateTask } from "./service/task"
+import { updateTask, deleteTask, attachFile, deleteAttachedFile } from '../ws/service/task'
 
 async function onUpdateTask(
     event: any,

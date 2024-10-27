@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { PageType } from "./PageType"
-import { onDontHaveAnAccountClick, onLoginClick } from "../logic/login-page"
+import { onDontHaveAnAccountClick, onLoginClick } from "../../logic/login-page"
 
 type LoginPageProps = {
     setPageType: (pageType: PageType) => void

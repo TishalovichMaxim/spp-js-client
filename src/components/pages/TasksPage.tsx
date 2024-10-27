@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react"
-import { Task, TaskStatus } from "../model/task"
-import TaskPreview from "./components/TaskPreview"
+import { Task, TaskStatus } from "../../model/task"
+import TaskPreview from "../sub/TaskPreview"
 import { PageType } from "./PageType"
-import { getTasks } from "../logic/tasks-page"
-import Navbar from "./components/Navbar"
+import { getTasks } from "../../logic/tasks-page"
+import Navbar from "../sub/Navbar"
 
 type TaskPageProps = {
     selectTask: (task: Task) => void,

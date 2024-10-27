@@ -1,5 +1,5 @@
-import { PageType } from "../pages/PageType";
-import { logOut } from "./service/auth/log-out";
+import { PageType } from "../components/pages/PageType";
+import { logOut } from "../ws/service/auth";
 
 async function onLogOut(setPageType: (pt: PageType) => void) {
     try {

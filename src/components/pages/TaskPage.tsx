@@ -1,9 +1,9 @@
 import { useState } from "react"
-import { Task, FileInfo } from "../model/task"
+import { Task, FileInfo } from "../../model/task"
 import { PageType } from "./PageType"
-import { AttachedFile } from "./components/AttachedFile"
-import { onAttachFile, onDeleteTask, onDeleteAttachedFile, onUpdateTask } from "../logic/task-page"
-import Navbar from "./components/Navbar"
+import { AttachedFile } from "../sub/AttachedFile"
+import { onAttachFile, onDeleteTask, onDeleteAttachedFile, onUpdateTask } from "../../logic/task-page"
+import Navbar from "../sub/Navbar"
 
 type TaskPageParams = {
     task: Task,
@@ -24,48 +24,6 @@ function TaskPage(props: TaskPageParams) {
 
     const [updateMessage, setUpdateMessage] = useState("")
     const [attachMessage, setAttachMessage] = useState("")
-
-    //const onTaskUpdate = (e: any) => {
-    //    e.preventDefault()
-
-    //    if (
-    //        title.length == 0
-    //        && content.length == 0
-    //        && date === ""
-    //    ) {
-    //        setUpdateMessage("Invalid input...")
-    //        return
-    //    }
-
-    //    fetch(
-    //        URL_BASE + "tasks/" + task.id,
-    //        {
-    //            method: "PUT",
-    //            headers: {
-    //                "Content-Type": "application/json",
-    //            },
-    //            body: JSON.stringify({
-    //                title: title,
-    //                content: content,
-    //                status:  status,
-    //                completionDate: date
-    //            }),
-    //        }
-    //    )
-    //    .then(
-    //        async (res) => {
-    //            if (res.status == 200) {
-    //                setUpdateMessage("Task successfully updated")
-    //            } else {
-    //                const errorInfo = await res.json()
-    //                setUpdateMessage(errorInfo.message)
-    //            }
-    //        },
-    //        () => {
-    //            setUpdateMessage("An error occured...")
-    //        }
-    //    )
-    //}
 
     const updatedTask = new Task(task.id, "", status, title, content, date, [])
     

@@ -1,5 +1,5 @@
-import { PageType } from "../pages/PageType";
-import { signUp } from "./service/auth/sign-up";
+import { PageType } from "../components/pages/PageType";
+import { signUp } from '../ws/service/auth'
 import { validateSignUpCredentials } from "./service/auth/validation";
 
 function onHaveAnAccountClick(setPageType: (pt: PageType) => void) {

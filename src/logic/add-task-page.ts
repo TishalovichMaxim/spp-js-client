@@ -1,7 +1,8 @@
 import { Task } from '../model/task'
-import { PageType } from '../pages/PageType'
+import { PageType } from '../components/pages/PageType'
 import { AuthError } from './service/auth/auth-error'
-import { addTask, validateTask } from './service/task'
+import { validateTask } from './service/task'
+import { addTask } from '../ws/service/task'
 
 async function onAddTask(
     event: any,

@@ -1,5 +1,5 @@
 import { onLogOut } from "../../logic/navbar"
-import { PageType } from "../PageType"
+import { PageType } from "../pages/PageType"
 
 type PageTypeChanger = (pt: PageType) => void
 

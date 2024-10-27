@@ -1,8 +1,8 @@
 import { useState } from "react"
-import { Task, TaskStatus } from "../model/task"
-import { onAddTask } from "../logic/add-task-page"
+import { Task, TaskStatus } from "../../model/task"
+import { onAddTask } from "../../logic/add-task-page"
 import { PageType } from "./PageType"
-import Navbar from "./components/Navbar"
+import Navbar from "../sub/Navbar"
 
 type AddTaskPageProps = {
     setPageType: (pt: PageType) => void
