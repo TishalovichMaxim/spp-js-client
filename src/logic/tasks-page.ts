@@ -1,7 +1,7 @@
 import { Task } from "../model/task"
 import { PageType } from "../components/pages/PageType"
 import { AuthError } from "./service/auth/auth-error"
-import { getTasks as _getTasks } from "../ws/service/task"
+import { getTasks as _getTasks } from "../graph-ql/task"
 
 async function getTasks(
     setPageType: (pt: PageType) => void,

@@ -1,6 +1,8 @@
 const URL_BASE = "http://localhost:18080/"
 
 const Config = {
+    GraphQlUrl: "http://localhost:18080/graph-ql",
+
     WsHost: "ws://localhost:28080",
 
     ReqTimeout: 5_000,

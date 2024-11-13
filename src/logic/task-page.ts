@@ -3,7 +3,8 @@ import { PageType } from "../components/pages/PageType"
 import { AuthError } from "./service/auth/auth-error"
 import { InvalidDataError } from "./service/errors"
 import { validateTask } from "./service/task"
-import { updateTask, deleteTask, attachFile, deleteAttachedFile } from '../ws/service/task'
+import { updateTask, deleteTask, deleteAttachedFile } from '../graph-ql/task'
+import { attachFile } from './service/task'
 
 async function onUpdateTask(
     event: any,

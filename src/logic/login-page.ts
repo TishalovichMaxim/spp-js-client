@@ -1,5 +1,5 @@
 import { PageType } from "../components/pages/PageType"
-import { signIn } from '../ws/service/auth'
+import { signIn } from "./service/auth/sign-in"
 
 function onDontHaveAnAccountClick(setPageType: (pt: PageType) => void) {
     setPageType(PageType.Registration)
